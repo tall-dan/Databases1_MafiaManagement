@@ -1,0 +1,18 @@
+#This procedure should be used to service other procedures
+use MafiaTracker
+
+delimiter //
+
+#The purpose of this procedure is to check whether a family exists
+#If it doesn't, this procudure returns a 0. If it does, it returns a 1
+#If null, the procedure will return 0 for now.
+create procedure checkFamily(in fam varchar(50))
+begin
+	declare status int;
+	if exists (Select * from Family where Name = fam) then set status =1;
+	else set status = 0;
+	end if;
+	select status;
+end //
+
+delimiter ;

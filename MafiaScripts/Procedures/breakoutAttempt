@@ -1,0 +1,30 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure breakoutattempt(in head int, in prisoner int, in outcome int)
+begin
+	declare caught int;
+	declare pris varchar(50);
+	if outcome = 0 then update Employee set Prison= null where Emp_ID = prisoner;
+	#does nothing on 1
+	else if outcome = 2 then
+	     	set caught = (
+                   select Emp_ID
+                   from Employee
+                   where Family =(select Family from Employee where Emp_ID = head) and
+                         (Emp_ID <> head) and Prison is null
+                   order by RAND()
+                   LIMIT 1);
+		select caught;
+	    	if caught is not null then 
+	     	   set pris = (select Prison from Employee where Emp_ID = prisoner);
+	     	   update Employee 
+	     	   set Prison = pris
+	     	   where Emp_ID = caught;
+		end if;
+	     end if;
+	end if; 
+end //
+
+delimiter ;

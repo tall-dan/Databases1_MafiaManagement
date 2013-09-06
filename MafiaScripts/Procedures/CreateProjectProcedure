@@ -1,0 +1,16 @@
+use MafiaTracker;
+delimiter //
+create procedure CreateProject(in descr varchar(50), in name varchar(50), in fam varchar(50))
+begin
+	declare status int;
+	if descr = '' then set descr = null;
+	end if;
+	#If the name is null, set status to 1
+	if name = '' then set status = 1;
+	else
+	    insert into Project(Description, Name, Family) values(descr, name, fam);
+	    set status = 0;
+	end if;
+	select status;
+end //
+delimiter ;

@@ -1,0 +1,42 @@
+use MafiaTracker;
+
+alter table Employee
+add constraint FK_Family foreign key (Family) references Family(Name); 
+alter table Employee
+add constraint FK_Prison foreign key (Prison) references Prison(ID);
+
+alter table Works_On
+add constraint FK_Project foreign key (Project) references Project(ProjectID);
+alter table Works_On
+add constraint FK_Employee foreign key (Employee) references Employee(Emp_ID);
+
+alter table Prison
+add constraint FK_LocatedIn foreign key (State, City, Region) references Turf(State, City, Region);
+
+alter table Project
+add constraint FK_Works_Family foreign key (Family) references Family(Name);
+
+alter table Family
+add constraint FK_Head foreign key (Head) references Employee(Emp_ID);
+
+alter table Enemy_Of
+add constraint FK_Family1 foreign key(Family1) references Family(Name);
+alter table Enemy_Of
+add constraint FK_Famil21 foreign key(Family2) references Family(Name);
+
+alter table Business
+add constraint FK_OwnedBy foreign key (ownedby) references Family(Name);
+alter table Business
+add constraint FK_Business_LocatedIn foreign key (State, City, Region) references Turf(State,City,Region);
+
+
+alter table Sells
+add constraint FK_BusinessID foreign key (BusinessID) references Business(ID);
+alter table Sells
+add constraint FK_ProductID foreign key (ProductID) references Product(ID);
+
+alter table Turf
+add constraint FK_Controlling_Family foreign key (Controlling_Family) references Family(Name);
+
+create index UN_Index on Employee(Username);
+create index BName_Index on Business(Name);

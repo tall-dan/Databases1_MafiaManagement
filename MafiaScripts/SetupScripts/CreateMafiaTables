@@ -1,0 +1,84 @@
+use MafiaTracker;
+
+create table Project(
+	ProjectID int auto_increment,
+	Description varchar(255),
+	Hours_Worked smallint not null,
+	Name varchar(50) not null,
+	primary key(ProjectID)
+);
+
+create table Product(
+	ID int auto_increment,
+	Name varchar(50) not null,
+	Manf_Cost float not null,
+	Sale_Price float not null,
+	Primary key (ID)
+);
+
+create table Employee(
+	Emp_ID int auto_increment,
+	Name varchar(50) not null,
+	DOB datetime not null,
+	Address varchar(100) not null,
+	Family varchar(50),
+	Prison int,
+	Username varchar(30),
+	Password varchar(50),
+	Primary key (Emp_ID)
+);
+
+create table Works_On(
+	Employee int,
+	Project int,
+	Hours_Worked int,
+	Primart key (Employee, Project)
+);
+
+create table Prison(
+	Name varchar(50) not null,
+	Warden varchar(50) not null,
+	No_of_Guards smallint not null,
+	state varchar(50),
+	city varchar(50),
+	region varchar(50),
+	Primary key (Name) 
+);
+
+create table Family(
+	Name varchar(50),
+	Head int not null,
+	Primary key (Name)
+);
+
+create table Enemy_Of(
+	Family1 varchar(50),
+	Family2 varchar(50),
+	Primary Key (Family1, Family2)
+);
+
+create table Business(
+	ID int auto_increment,
+	Name varchar(50) not null,
+	Profit float not null,
+	Legit bool not null,
+	OwnedBy varchar(50),
+	state varchar(50),
+	city varchar(50),
+	region varchar(50),
+	Primary key (ID)
+);
+
+Create table Sells(
+	BusinessID int,
+	ProductID int
+);
+
+create table Turf(
+	State varchar(50),
+	City varchar(50),
+	Region varchar(50),
+	Mayor varchar(50) not null,
+	Controlling_Family varchar(50),
+	Primary key (State, City, Region)
+);

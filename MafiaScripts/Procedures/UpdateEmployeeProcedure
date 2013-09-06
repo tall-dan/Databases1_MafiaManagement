@@ -1,0 +1,32 @@
+use MafiaTracker;
+delimiter //
+
+create procedure updateEmp(in id int, in fam varchar(50),in addr varchar(50), in old varchar(50), in new varchar(50), in confirm varchar(50), in code varchar(100))
+begin
+	declare status int;
+	if addr = '' then set addr = (select Address from Employee where Emp_ID = id);
+	end if;
+	if fam = '' then set fam = (select Family from Employee where Emp_ID = id );
+	end if;
+	if old <> '' then
+        	#Set status to 1 if the old password isn't right
+                if not exists (select Password from Employee where Password = old) then set status = 1;
+                #Set status to 2 if the passwords do not match
+                else if new <> confirm then set status = 2;
+		     #Set status to 3 if the family doesn't exist
+                     else if not exists (select * from Family where Name = fam) and fam is not null  then set status =3;
+			  else
+                        	update Employee set Password =new, Address = addr, Family = fam where Emp_ID = id;
+                        	set status = 0;
+			  end if;
+                     end if;
+                end if;
+        else if not exists (select * from Family where Name = fam) then set status =3;
+             else
+                update Employee set Address = addr, Family = fam where Emp_ID = id;
+                set status = 0;
+             end if;
+	end if;
+	select status;
+end //
+delimiter ;

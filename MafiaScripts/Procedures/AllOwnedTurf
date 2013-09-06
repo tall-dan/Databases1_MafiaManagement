@@ -1,0 +1,12 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure AllOwnedTurf(in fam varchar(50))
+begin
+   select f.name, t.state, t.city, t.region
+   from Family f join Turf t on (f.Name = t.Controlling_Family)
+   where f.Name <> fam;
+end //
+
+delimiter ;

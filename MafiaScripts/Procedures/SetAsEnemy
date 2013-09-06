@@ -1,0 +1,23 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure setAsEnemy(in fam1 varchar(50), in fam2 varchar(50))
+begin
+	declare status int;
+	#If either fam1 or fam2 are left blank, set status = 1
+	if fam1 = '' or fam2 = '' then set status = 1;
+	#If either of the families do not exist set status = 2
+	else if (select checkFamily(fam1)=0) or (select checkFamily(fam2)=0) then set status = 2;
+	     #If they are already enemies, set status = 3;
+	     else if exists(select * from Enemy_Of where (Family1 = fam1 and Family2 = fam2) or (Family1 = fam2 and Family2 = fam1))  then set status = 3;
+		  else
+			insert into Enemy_Of values(fam1, fam2);
+			set status = 0;
+		  end if;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

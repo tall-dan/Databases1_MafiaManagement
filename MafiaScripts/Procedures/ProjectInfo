@@ -1,0 +1,12 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure ProjectInfo(in emp int)
+begin
+	select p.ProjectID, p.Name, p.Description 
+	from Employee e join Project p on (e.Family = p.family) 
+	where e.Emp_ID = emp and not exists (select * from Works_On where Employee = e.Emp_ID and Project = p.ProjectID );
+end //
+
+delimiter ;

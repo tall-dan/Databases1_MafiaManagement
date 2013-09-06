@@ -1,0 +1,30 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure AddProduct(in nam varchar(50), in mc float, in sp float, in bID int)
+begin
+	declare status int;
+	if mc = '' then set mc =0;
+	end if;
+	if sp = '' then set sp =0;
+	end if;
+	set mc = round(mc,2);
+	set sp = round(sp,2);
+	#Set status to 1 if a negative cost was input
+	if mc<0 or sp<0 then set status =1;
+	#Set status to 2 if the name was left blank
+	else if nam = '' then set status = 2;
+	     else if not exists (Select * from Business where ID = bID) then set status = 3;
+	     	  else
+			insert into Product(Name, Manf_Cost, Sale_Price) values(nam, mc, sp);
+			insert into Sells values(bID, (select MAX(ID) from Product ));
+			set status = 0;
+	 	  end if;
+	     end if;
+	end if;
+	select status;
+	
+end //
+
+delimiter ;

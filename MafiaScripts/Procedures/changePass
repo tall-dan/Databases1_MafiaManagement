@@ -1,0 +1,22 @@
+use MafiaTracker;
+delimiter //
+
+create procedure changePass(in emp int, in old varchar(50), in new varchar(50), in confirm varchar(50))
+begin
+	declare status int;
+	set status =0;
+	if old != '' then 
+		#Set status to 1 if the old password isn't right
+		if not exists (select Password from Employee where Password = old) then set status = 3;
+		#Set status to 2 if the passwords do not match
+		else if new <> confirm then set status = 4;
+		     else
+			update Employee set Password = new where Emp_ID = emp;
+			set status = 0;
+	     	     end if;
+		end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

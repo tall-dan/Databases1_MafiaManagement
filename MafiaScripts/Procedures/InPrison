@@ -1,0 +1,15 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure inPrison(in fam varchar(50), in pris varchar(50))
+begin
+	declare status int;
+	if not exists(select * from Prison where Name = pris) then set status = 1;
+	else
+	    select Emp_ID, Name from Employee where Prison = pris and Family = fam; 
+	    set status =0;
+	end if;
+end //
+
+delimiter ;

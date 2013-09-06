@@ -1,0 +1,22 @@
+use MafiaTracker;
+
+delimiter //
+create procedure joinProject(in emp int, in pid int)
+begin
+	declare status int;
+	#If the Emp_ID doesn't exist, set status =1;
+	if not exists (select Emp_ID from Employee where Emp_ID = emp) then set status = 1;
+	#If the projectID doesn't exist, set status = 2;
+	else if not exists(Select ProjectID from Project where ProjectID = pid) then set status = 2;
+		#Set status to 3 if the employee is already working on the project
+		else if exists(Select * from Works_On where Project= pid and Employee = emp) then set status = 3;
+		     else
+		     	insert into Works_On(Employee, Project, Hours_Worked) values(emp, pid, 0);
+		     	set status = 0;
+		     end if;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

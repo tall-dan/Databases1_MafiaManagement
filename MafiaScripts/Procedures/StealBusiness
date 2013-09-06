@@ -1,0 +1,17 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure StealBusiness(in busID int, in fam varchar(50))
+begin
+	declare shaftedFam varchar(50);
+	set shaftedFam = (select OwnedBy from Business where ID = busID);
+	update Business set OwnedBy=fam where ID = busID;
+	if not exists (select * from Enemy_Of where (Family1 = fam and Family2 = shaftedFam) or 
+		      (Family1 = shaftedFam and Family2 = fam)) then 
+		      insert into Enemy_Of(Family1, Family2) values(fam, shaftedFam);
+	end if;
+	select shaftedFam;
+end //
+
+delimiter ;

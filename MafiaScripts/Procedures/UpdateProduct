@@ -1,0 +1,27 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure UpdateProduct(in pid int,in pname varchar(50), in mcost int, in sprice int, in headF int)
+begin
+	declare status int;
+	#set status to 1 if pname is left blank
+	if pname = '' then set status =  1;
+	#if the prices are negative, status is 2
+	else if mcost<0 or sprice<0 then set status = 2;
+	     #Set status to 3 if the employee isn't the head
+	     else if not exists(select * from Family where Head = headF) then set status =3;
+		  #Set status to 4 if the pid doesn't exist
+	     	  else if not exists (select * from Product where ID = pid) then set status = 4;
+			else
+			   update Product set Name = pname, Manf_Cost=mcost, Sale_Price=sprice where ID=pid;
+			   set status = 0;
+		
+			end if;
+		  end if;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

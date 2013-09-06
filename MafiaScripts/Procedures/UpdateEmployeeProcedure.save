@@ -1,0 +1,28 @@
+use MafiaTracker;
+delimiter //
+
+create procedure updateEmp(in id int,in addr varchar(50), in fam varchar(50), in prison varchar(50),
+			   in old varchar(50), in new varchar(50), in confirm varchar(50))
+begin
+	declare status int;
+	if addr = '' then set addr = (select Address from Employee where Emp_ID = id);
+	end if;
+	if fam = '' then set fam = (select Family from Employee where Emp_ID = id);
+	end if;
+	if prison = '' then set prison = (select Prison from Employee where Emp_ID =id);
+	end if;
+	#Set status to 1 if family doesn't exist
+	if not exists (select Name from Family where Name = fam) and fam is not null then set status = 1;
+	#set status =2 if the Prison ID doesn't exists
+	else if not exists (select ID from Prison where ID = prison) and prison is not null then set status = 2;
+		else 
+		   #Sets status 
+		   set status = call changePass(id, old, new, confirm);
+		   if status = 0 then
+		   	update Employee set Address = addr, Family = fam, Prison = prison where Emp_ID = id;
+		   			   end if;
+	     end if;
+	end if;
+	select status;
+end //
+delimiter ;

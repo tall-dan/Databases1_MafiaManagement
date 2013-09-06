@@ -1,0 +1,40 @@
+use MafiaTracker
+
+DELIMITER $$
+create procedure register(IN name varchar(50), 
+			IN dob datetime,
+			IN address varchar(100),
+			IN fam varchar(50),
+			IN pris varchar(50),
+			IN password varchar(50),
+			IN user varchar(30),
+			IN code varchar(100))
+begin
+	declare status int;
+	if fam = '' then set fam = null;
+	end if;
+	if pris = '' then set pris = null;
+	end if;
+	# if the family doesn't exist, set the status to 1
+	if (exists (select Name from Family where Name = fam)) and (fam is not null) then set status =1;
+	else
+	  #If the prison doesn't exist, set the status variable to 2 
+	  if (exists (select Name from Prison where Name = pris)) and (pris is not null) then set status = 2;
+	  else if password = '' then set status = 3;
+	       else if user = '' then set status = 4;
+		    else if exists (select * from Employee where Username = user) then set status = 5;
+		    	 else if name = '' then set status = 6;
+			      else
+				insert into Employee(Name, DOB, Address, Family, Password, Username, Prison)
+		     	   	values(name, dob, address, fam, password, user, pris);
+	     	 	   	#Set the status to 0 if everything went through
+	    	 	  	set status = 0;
+			      end if;
+			 end if;
+		    end if;
+	       end if;
+	  end if;
+	end if;
+	select status;
+end$$
+DELIMITER ;

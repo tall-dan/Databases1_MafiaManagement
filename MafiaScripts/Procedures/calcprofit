@@ -1,0 +1,22 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure calcprofit(in bID int, in manf float, in sPrice float, in ordQ int)
+begin
+	declare pt float;
+	declare status int;
+	#Set status = 1 if prices are less than 0
+	if((manf <0) or (sPrice<0)) then set status =1;
+	#set status = 2 if ordQ is less than 0
+	else if (ordQ<0) then set status =2;
+	     else
+		set pt = round((sPrice-manf)*ordQ,2)+(select Profit from Business where ID = bID);
+		update Business set Profit = pt where ID = bID;
+		set status = 0;
+	     end if;
+	end if;
+	select status; 
+end //
+
+delimiter ;

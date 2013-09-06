@@ -1,0 +1,27 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure StartRivalFamily(in emp int, in fam varchar(50))
+begin
+	declare status int;
+	declare oldFam varchar(50);
+	#Set status to 1 if the employee doesn't enter a family
+	if fam = '' then set status = 1;
+	#Set status to 2 if the family name already exists
+	else if (select checkFamily(fam)=1) then set status = 2;
+	    #If the Head of a family tries to leave, set status to 3;
+	     else if exists (Select * from Family where Head = emp) then set status =3;
+		  else
+			set oldFam = (select Family from Employee where Emp_ID = emp);
+			insert into Family(Name, Head) values(fam, emp);
+			update Employee set Family = fam where Emp_ID =emp;
+			insert into Enemy_Of(Family1, Family2) values(oldFam, fam);
+			set status = 0;
+		  end if;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

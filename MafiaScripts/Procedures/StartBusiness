@@ -1,0 +1,28 @@
+use MafiaTracker
+
+delimiter //
+create procedure startBusiness(in nam varchar(50), in leg boolean, in owned varchar(50),
+			       in st varchar(50), in ci varchar(50), in reg varchar(50))
+begin
+	declare status int;
+	if leg = '' then set leg = 1;
+	end if;
+	if owned = '' then set owned = null;
+	end if;
+	#If the name is blank, set status to 1
+	if nam = '' then set status = 1;
+	#If the city, state, or region don't exist, set status to 2
+	else if not exists (select * from Turf where (State = st and City = ci and Region = reg)) then set status = 2; 
+	     #Set status to 3 if the family doesn't exist
+	     else if (select checkFamily(owned) = 0 ) and owned is not null then set status =3;
+		  else
+		      insert into Business(Name, Revenue, Legit, OwnedBy, state, city, region)
+		      values(nam, 0, leg, owned, st, ci, reg);
+		      set status = 0;
+		  end if;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

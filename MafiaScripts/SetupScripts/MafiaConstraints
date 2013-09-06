@@ -1,0 +1,30 @@
+use MafiaTracker;
+
+alter table Employee
+add check(
+	dob < getDate()
+);
+
+alter table Prison
+add check(
+	No_of_Guards >0
+);
+
+alter table Works_On
+add check(
+	Hours_worked >=0
+);
+
+alter table Business
+add check(
+	legit =0 or legit =1
+);
+
+alter table Product
+add check(
+	manf_cost >=0
+);
+alter table Product
+add check(
+	sale_price >=0
+);

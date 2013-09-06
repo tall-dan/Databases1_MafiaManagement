@@ -1,0 +1,5 @@
+use MafiaTracker
+
+update Employee set Password = (AES_DECRYPT(Password, 'C6TshtaIWd4IfxvzngAXB0S9xT0MtFcMwM5tlhMvyDLRoZQKM565EzIefxaLjfK'));
+#update Employee set Username = (AES_DECRYPT(Username, 'C6TshtaIWd4IfxvzngAXB0S9xT0MtFcMwM5tlhMvyDLRoZQKM565EzIefxaLjfK'));
+

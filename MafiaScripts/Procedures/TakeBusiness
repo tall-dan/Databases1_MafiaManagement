@@ -1,0 +1,16 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure TakeBusiness(in busID int, in fam varchar(50))
+begin
+	declare status int;
+	if not exists (select * from Business where ID = busID) then set status = 1;
+	else 
+	     update Business set OwnedBy = fam where ID = busID;
+	     set status =0;
+	end if;
+	select status;
+end //
+
+delimiter ;

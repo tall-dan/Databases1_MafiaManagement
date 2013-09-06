@@ -1,0 +1,26 @@
+use MafiaTracker;
+
+delimiter //
+create procedure addHours(in emp int, in pid int, in hours int)
+begin
+	declare status int;
+	#First check to see if the project actually exists
+	#Return 1 if it doesn't exist
+	if not exists (select Project from Works_On where Project = pid)
+	then set status =1;
+	#Now check if hours is positive. If not, set status =2
+	else if hours<0 then set status = 2;
+	     #Now check if employee exists. If it doesn't return 3
+	     else if not exists (Select Employee from Works_On where Employee = emp) then set status = 3; 
+	     	#If we get here, go ahaed and add the hours to the current hours
+	     	else
+		   update Works_On
+		   set Hours_Worked = Hours_Worked + hours
+		   where Project = pid and Employee = emp;
+		   set status = 0;
+	     	end if;
+	     end if;
+	end if;
+	select status;
+end //
+delimiter ;

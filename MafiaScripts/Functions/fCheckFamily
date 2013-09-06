@@ -1,0 +1,13 @@
+use MafiaTracker
+
+delimiter //
+#This function returns a 1 if a family exists and a 0 if it doesn't
+create function checkFamily(fam varchar(50))
+returns int
+begin
+	if exists (select * from Family where Name = fam) then return 1;
+	else return 0;
+	end if;
+end //
+
+delimiter ;

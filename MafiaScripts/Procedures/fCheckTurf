@@ -1,0 +1,11 @@
+use MafiaTracker
+delimiter //
+#return 1 if the turf exists. 0 otherwise
+create function checkTurf(st varchar(50), ci varchar(50), reg varchar(50))
+returns int
+begin
+	if exists (select * from Turf where (State = st and City = ci and Region = reg)) then return 1;
+	else return 0;
+	end if;
+end //
+delimiter ;

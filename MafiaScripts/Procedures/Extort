@@ -1,0 +1,10 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure extort(in fam varchar(50), in bid int)
+begin
+	insert into Extorts values(fam, bid);
+end //
+
+delimiter ;

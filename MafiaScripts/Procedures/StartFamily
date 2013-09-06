@@ -1,0 +1,24 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure StartFamily(in emp int, in fam varchar(50))
+begin
+	declare status int;
+	#Set status to 1 if the employee doesn't enter a family
+	if fam = '' then set status = 1;
+	#Set status to 2 if the family name already exists
+	else if (select checkFamily(fam)=1) then set status = 2;
+	     #If the employee already has a family, set status to 3;
+	     else if (select Family from Employee where Emp_ID = emp) is not null then set status = 3;
+		  else
+			insert into Family(Name, Head) values(fam, emp);
+			update Employee set Family = fam where Emp_ID =emp;
+			set status = 0;
+		  end if;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

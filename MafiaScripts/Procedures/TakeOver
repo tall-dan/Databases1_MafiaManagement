@@ -1,0 +1,20 @@
+use MafiaTracker
+
+delimiter //
+
+create procedure takeover(in emp int, in fam varchar(50))
+begin
+	declare status int;
+	#Set status to 1 if family was left blank
+	if fam = '' then set status = 1;
+	#Set status to 2 if the family doesn't exist
+	else if (select checkFamily(fam) = 0) then set status = 2;
+	     else
+		update Family set Head=emp where Name=fam;
+		set status = 0;
+	     end if;
+	end if;
+	select status;
+end //
+
+delimiter ;

@@ -1,0 +1,20 @@
+use MafiaTracker
+
+delimiter //
+create procedure changeFamily(in emp int, in fam varchar(50))
+begin
+	declare status int;
+	if fam = '' then set fam = null;
+	end if;
+	#If employee doesn't exist, set status = 1
+	if not exists(select Emp_ID from Employee where Emp_ID = emp) then set status =1;
+	#If the Family doesn't exist, set status = 2;
+	else if (not exists (Select Name from Family where Name = fam)) and fam is not null then set status =2;
+	     else 
+		update Employee set Family = fam where Emp_ID = emp;
+		set status = 0;
+	     end if;
+	end if;
+	select status;
+end //
+delimiter ;
